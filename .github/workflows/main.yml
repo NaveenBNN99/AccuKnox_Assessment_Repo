@@ -21,7 +21,7 @@ jobs:
           docker build -t $ECR_REPO:$GITHUB_SHA .
           echo "${{ secrets.AWS_ACCESS_KEY_ID }}" > ~/.aws/credentials
           echo "${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/credentials
-          docker login -u AWS -p $(aws ecr get-login-password --region your-region) $ECR_REPO
+          docker login -u AWS -p $(aws ecr get-login-password --region us-east-1) $ECR_REPO
           docker push $ECR_REPO:$GITHUB_SHA
 
       - name: Deploy to ECR
