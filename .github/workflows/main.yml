@@ -1,0 +1,32 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      ECR_REPO: "815322657670.dkr.ecr.us-east-1.amazonaws.com/mapup-repo"
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t $ECR_REPO:$GITHUB_SHA .
+          echo "${{ secrets.AWS_ACCESS_KEY_ID }}" > ~/.aws/credentials
+          echo "${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/credentials
+          docker login -u AWS -p $(aws ecr get-login-password --region your-region) $ECR_REPO
+          docker push $ECR_REPO:$GITHUB_SHA
+
+      - name: Deploy to ECR
+        if: github.ref == 'refs/heads/main'
+        run: |
+          docker pull $ECR_REPO:$GITHUB_SHA
+          kubectl apply -f deployment.yaml
+          kubectl apply -f service.yaml
