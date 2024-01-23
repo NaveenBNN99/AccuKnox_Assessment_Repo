@@ -15,6 +15,6 @@ spec:
       containers:
       - name: wisecow-container
         image: 815322657670.dkr.ecr.us-east-1.amazonaws.com/mapup-repo:latest
-      
+        command: ["./wisecow.sh"]
         ports:
         - containerPort: 4499
