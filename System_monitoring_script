@@ -1,0 +1,50 @@
+#!/bin/bash
+
+
+CPU_THRESHOLD=80
+MEMORY_THRESHOLD=80
+DISK_THRESHOLD=80
+
+
+check_cpu_usage() {
+    local cpu_usage=$(top -bn1 | grep "Cpu(s)" | awk '{print $2}' | cut -d '.' -f1)
+    if [ "$cpu_usage" -gt "$CPU_THRESHOLD" ]; then
+        echo "High CPU usage detected! Current CPU usage: $cpu_usage%"
+    fi
+}
+
+
+check_memory_usage() {
+    local memory_usage=$(free | awk '/Mem/{printf "%.2f", $3/$2*100}')
+    if [ "$memory_usage" -gt "$MEMORY_THRESHOLD" ]; then
+        echo "High memory usage detected! Current memory usage: $memory_usage%"
+    fi
+}
+
+
+check_disk_space() {
+    local disk_usage=$(df -h | awk '$NF=="/"{print $5}' | cut -d '%' -f1)
+    if [ "$disk_usage" -gt "$DISK_THRESHOLD" ]; then
+        echo "High disk space usage detected! Current disk space usage: $disk_usage%"
+    fi
+}
+
+
+check_running_processes() {
+    local processes=$(ps aux --no-heading | wc -l)
+    if [ "$processes" -gt 100 ]; then
+        echo "High number of running processes detected! Current processes: $processes"
+    fi
+}
+
+
+main() {
+    echo "System Health Monitoring Script"
+    check_cpu_usage
+    check_memory_usage
+    check_disk_space
+    check_running_processes
+}
+
+
+main
