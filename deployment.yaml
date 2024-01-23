@@ -12,9 +12,10 @@ spec:
       labels:
         app: wisecow
     spec:
-      containers:
-      - name: wisecow-container
-        image: 815322657670.dkr.ecr.us-east-1.amazonaws.com/mapup-repo:latest
-        command: ["./wisecow.sh"]
-        ports:
-        - containerPort: 4499
+  containers:
+  - name: wisecow-container
+    image: 815322657670.dkr.ecr.us-east-1.amazonaws.com/mapup-repo:latest
+    command: ["/bin/bash", "-c", "./wisecow.sh"]
+    ports:
+    - containerPort: 4499
+
