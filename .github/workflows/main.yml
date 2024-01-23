@@ -13,22 +13,20 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Transfer kubeconfig to EC2
-        run: scp -i ${{ secrets.SSH_PRIVATE_KEY }} kubeconfig.yaml ec2-user@3.83.178.67:~/kubeconfig.yaml
-
-      - name: Set up kubectl in EC2
-        run: |
-          ssh -i ${{ secrets.SSH_PRIVATE_KEY }} ec2-user@3.83.178.67 "mkdir -p ~/.kube && mv ~/kubeconfig.yaml ~/.kube/config"
-
       - name: Build Docker image
         run: |
           docker build -t ${{ secrets.ECR_REPO }}:$GITHUB_SHA .
           docker login -u AWS -p $(aws ecr get-login-password --region us-east-1) ${{ secrets.ECR_REPO }}
-          docker push ${{ secrets.ECR_REPO }}:$GITHUB_SHA
+        env:
+          REPOSITORY: mapup-repo
+          IMAGE_TAG: latest
+
+      - name: Image Push
+        run:  docker push ${{ secrets.ECR_REPO }}:$GITHUB_SHA
 
       - name: Deploy to Kubernetes
         if: github.ref == 'refs/heads/main'
         run: |
-          ssh -i ${{ secrets.SSH_PRIVATE_KEY }} ec2-user@3.83.178.67 "kubectl apply -f deployment.yaml --validate=false"
-          ssh -i ${{ secrets.SSH_PRIVATE_KEY }} ec2-user@3.83.178.67"kubectl apply -f service.yaml"
+          kubectl apply -f deployment.yaml --validate=false
+          kubectl apply -f service.yaml
 
