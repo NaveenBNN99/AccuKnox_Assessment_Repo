@@ -1,14 +1,5 @@
 #!/bin/bash
 
-echo "Checking prerequisites..."
-# Add commands to check prerequisites and log details
-command_to_check_prerequisites_1
-command_to_check_prerequisites_2
-
-echo "Install prerequisites."
-
-# Rest of your script
-
 SRVPORT=4499
 RSPFILE=response
 
