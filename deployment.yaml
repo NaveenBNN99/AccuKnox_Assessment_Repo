@@ -7,14 +7,14 @@ spec:
   replicas: 2
   selector:
     matchLabels:
-      app: wisecow
+      app: wisecow-app
   template:
     metadata:
       labels:
-        app: wisecow
+        app: wisecow-app
     spec:
       containers:
-      - name: wisecow-container
+      - name: wisecow-app
         image: 815322657670.dkr.ecr.us-east-1.amazonaws.com/accuknox-repo:latest
         command: ["/bin/bash", "-c", "./wisecow.sh"]
         ports:
