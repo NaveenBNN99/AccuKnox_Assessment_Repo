@@ -4,11 +4,11 @@ variable "region" {
 }
 variable "access_key" {
   type    = string
-  default = "AKIA33VIEOODKYQQKKS6"
+  default = "Access_Key"
 }
 variable "secret_key" {
   type    = string
-  default = "7WRvySsXAI7ujpGOaM6ha+QX2FfHCQO+hgzEjcqz"
+  default = "Secret_Key"
 }
 
 # variable "vpc_cidr_block" {}
